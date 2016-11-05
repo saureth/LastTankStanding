@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 [RequireComponent(typeof(NavMeshAgent))]
 
 public class ControlPersonaje : MonoBehaviour {
@@ -12,7 +13,10 @@ public class ControlPersonaje : MonoBehaviour {
 	public GameObject proyectil;
 	public Vector3 target;
 	public float velocidadMaxima;
+	public Memoria conocimiento; //Conocimiento adquirido por el agente.
+
 	private float velocidadAnterior;
+	public bool siEsta = false;
 
 	void Awake () 
 	{
@@ -62,8 +66,8 @@ public class ControlPersonaje : MonoBehaviour {
 	}
 
 	private void IniciarPatrullaje(){
-		Debug.Log ("execute");
-		Debug.Log ((transform.position - target).magnitude);
+		//Debug.Log ("execute");
+		//Debug.Log ((transform.position - target).magnitude);
 		if ((transform.position-target).magnitude<1f) {
 			setPosition(new Vector3(Random.Range(-rangoPosiciones.x, rangoPosiciones.x), 0, Random.Range(-rangoPosiciones.z, rangoPosiciones.z)));
 		}
@@ -80,8 +84,36 @@ public class ControlPersonaje : MonoBehaviour {
 		miAgente.speed = velocidadAnterior;
 	}
 
-	public void buscar(string propiedades){
+	public void Buscar(string propiedades){
+		
+		string[] caracteristica = propiedades.Split (':');
+		Vector2 indice = new Vector2 ();
+		indice.x = conocimiento.GetIndexEtiqueta (caracteristica [0]);
+		indice.y = conocimiento.GetIndexValor (caracteristica [1]);
+		//Debug.Log (indice.x + " " + indice.y);
+		if ((indice.x >=0) && (indice.y >=0)) {
+			Idea myIdea = conocimiento.GetIdeaCaracteristica (indice);
+			Debug.Log (myIdea.nombre);
+			if (myIdea != null) {
+				int etiquetaPos = conocimiento.GetIndexEtiqueta ("Posicion");
+				int indexValor = myIdea.GetIndexValor (etiquetaPos);
+				string valor = conocimiento.GetValor (indexValor);
 
+				if (valor != "") {
+					valor = valor.Substring (1, valor.Length - 2);
+					valor = valor.Replace(" ","");
+					string[] pos = valor.Split (',');
+					//Debug.Log (valor);
+					Vector3 posicion = new Vector3 (float.Parse(pos[0]),float.Parse(pos[1]),float.Parse(pos[2]));
+					setPosition (posicion-(posicion-transform.position).normalized*2);
+				}
+
+			}
+		}
+	}
+
+	public bool MirarSiEsta(string b){
+		return siEsta;
 	}
 }
 

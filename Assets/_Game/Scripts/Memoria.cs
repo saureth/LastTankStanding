@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Memoria : MonoBehaviour {
-	public List<Idea>		ideas;
-	public List<Etiqueta>	etiquetas;
-	public List<string>		valores;
+	public List<Idea>		ideas; //circulo verde
+	public List<Etiqueta>	etiquetas; //linea
+	public List<string>		valores; 
 	public string			textoBase;
 
 	public void CrearIdea(string _nombre, Caracteristica[] _caracteristicas)
@@ -159,5 +159,54 @@ public class Memoria : MonoBehaviour {
 			return Tipo.cantidad;
 		}
 		return Tipo.cualidad;
+	}
+
+	public int GetIndexEtiqueta(string etiqueta){
+		int index = -1;
+		for(int i=0;i<etiquetas.Count;i++){
+			if (etiquetas [i].nombre.ToLower()==etiqueta.ToLower()) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
+
+	public int GetIndexValor(string valor){
+		int index = -1;
+		for(int i=0;i<valores.Count;i++){
+			if (valores [i].ToLower()==valor.ToLower()) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
+
+	public Idea GetIdeaCaracteristica(Vector2 caracteristica){
+		Idea elemento = null;
+		bool romper = false;
+		foreach (Idea item in ideas) {
+			foreach (Vector2 atr in item.indices) {
+				if (atr == caracteristica) {
+					//Debug.Log ("Lo encontre " + item.nombre);
+					elemento = item;
+					romper = true;
+					break;
+				}
+			}
+			if (romper) {
+				break;
+			}
+		}
+		return elemento;
+	}
+
+	public string GetValor(int index){
+		string valor = "";
+		if (index >= 0) {
+			valor = valores [index];
+		}
+		return valor;
 	}
 }

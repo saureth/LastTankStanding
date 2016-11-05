@@ -23,5 +23,17 @@ public class Idea
 		this.indices.Add(nIndices);
 	}
 
+	public int GetIndexValor(int etiqueta){
+		int valor=-1;
+		if (etiqueta >=0) {
+			foreach (Vector2 item in indices) {
+				if (item.x == etiqueta) {
+					valor = (int)item.y;
+					break;
+				}
+			}
+		}
+		return valor;
+	}
 
 }

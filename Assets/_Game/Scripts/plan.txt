@@ -1,0 +1,4 @@
+buscar=color:azul;
+disparar;
+mirar=color:rojo=2,4;
+imprimir=Se terminó el codigo;
