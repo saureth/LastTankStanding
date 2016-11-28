@@ -30,22 +30,26 @@ public class BulletScript : MonoBehaviour {
 	}
 
 	void OnCollisionEnter (Collision c) {
-		DoSomethingOnCollision (c.contacts[0].point);
+		DoSomethingOnCollision (c.contacts[0].point, c.gameObject);
 	}
 
 	void RaycastingForMiss () {
 		RaycastHit hit;
 		if (Physics.Raycast (transform.position, transform.forward, out hit, hitMissDistance)) {
-			DoSomethingOnCollision (hit.point);
+			DoSomethingOnCollision (hit.point, hit.collider.gameObject);
 		}
 		if (Physics.Raycast (transform.position, -transform.forward, out hit, hitMissDistance / 2)) {
-			DoSomethingOnCollision (hit.point);
+			DoSomethingOnCollision (hit.point, hit.collider.gameObject);
 		}
 	}
 
-	void DoSomethingOnCollision (Vector3 cPos) {
+	void DoSomethingOnCollision (Vector3 cPos, GameObject c) {
 		GameObject g = Instantiate (hitExplosion, cPos, Quaternion.identity) as GameObject;
 		g.SetActive (true);
+		if (c.gameObject.CompareTag("Tank")) {			
+			bool tankDestroyed = c.gameObject.GetComponent<LifeBarCtrl> ().TakeDamage (damage);
+			Debug.Log (tankDestroyed);
+		}
 		Destroy (gameObject);
 	}
 
