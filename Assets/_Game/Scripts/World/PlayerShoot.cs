@@ -42,6 +42,7 @@ public class PlayerShoot : MonoBehaviour {
 			cameraAnim.SetTrigger ("Shoot");
 			smokeAfterShoot.Play ();
 			GameObject g = Instantiate (bullet, startPosition.position, Quaternion.LookRotation(startPosition.forward)) as GameObject;
+			g.GetComponent<BulletScript> ().setPlayerName (this.gameObject.name);
 			g.GetComponent<BulletScript> ().damage = damage;
 			g.GetComponent<BulletScript> ().shootSpeed = shootSpeed;
 			g.GetComponent<BulletScript> ().maxTimeAlive = maxTimeAlive;

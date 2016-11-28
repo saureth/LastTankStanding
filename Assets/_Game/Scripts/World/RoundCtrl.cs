@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class RoundCtrl : MonoBehaviour {
 
 	public GameObject[] players; 
 	public Transform[] originPositions;
+	public int helpLife;
 	List<string> playerDead;
 	bool roundFinished;
 	int roundCount;
-	// Use this for initialization
+
+
 	void Start () {
 		playerDead = new List<string>();
 		roundCount = 0;
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		for (int i = 0; i < players.Length; i++) {
 			if (!players[i].activeSelf&&!playerDead.Contains(players[i].name)) {
@@ -28,14 +30,27 @@ public class RoundCtrl : MonoBehaviour {
 				if (roundCount > 2) {
 					Debug.Log ("Game finished");
 					FinishTheGame ();
-				} else
-				{
-					Debug.Log ("Round winner: " + CalculateRoundWinner());
+				} else	{
+					string winner = CalculateRoundWinner ();
+					Debug.Log ("Round winner: " + winner );
+					HelpTheLoser (winner);
 					NewRoundStart ();
 				}
 			}
 		}
 	}
+
+	public void HelpTheLoser(string winner){
+		for (int i = 0; i < players.Length; i++) {
+			if (!players [i].name.Equals (winner)) {
+				players [i].GetComponent<LifeBarCtrl> ().maxLife += helpLife;
+			} 
+			else {
+				players [i].GetComponent<LifeBarCtrl> ().maxLife -= helpLife;
+			}
+		}
+	}
+
 
 	public string CalculateRoundWinner(){
 		string winner = "NONE";
@@ -54,6 +69,7 @@ public class RoundCtrl : MonoBehaviour {
 			MoveToOriginPosition (players[i], i );
 			ResetLife (players[i]);
 			ResetBullets (players[i]);
+			ResetTimeStatistic(players[i]);
 			players [i].SetActive (true);
 		}
 
@@ -72,6 +88,13 @@ public class RoundCtrl : MonoBehaviour {
 	}
 
 	public void FinishTheGame(){
-		
+		SceneManager.LoadScene ("World");
+	}
+
+	public void ResetTimeStatistic(GameObject player){
+		GameObject statCtrl = GameObject.FindWithTag ("StatCtrl");
+		for (int i = 0; i < statCtrl.GetComponent<StatCtrl> ().playerIsAlive.Length; i++) {
+			statCtrl.GetComponent<StatCtrl> ().playerIsAlive [i] = true;
+		}
 	}
 }
