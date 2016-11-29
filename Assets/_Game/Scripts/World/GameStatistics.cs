@@ -32,6 +32,14 @@ public class GameStatistics {
 		Debug.Log ("Total Amount Of Bullet Shooted: " + totalAmountOfBulletShooted) ;
 	}
 
+	public string GimmeMyStatistics (){
+		string x = "Estadisticas para: " + playerName + " \n " +
+		           "Daño Total: " + totalDamageDealt + " \n " +
+		           "Muertes: " + amountOfDeaths + " \n " +
+		           "Asesinatos: " + amountOfKills;
+		return x;
+	}
+
 	public string getPlayerName(){
 		return this.playerName;
 	}

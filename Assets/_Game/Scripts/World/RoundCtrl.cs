@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class RoundCtrl : MonoBehaviour {
 
+	public Text myText;
 	public GameObject[] players; 
 	public Transform[] originPositions;
 	public int helpLife;
@@ -16,6 +18,7 @@ public class RoundCtrl : MonoBehaviour {
 	void Start () {
 		playerDead = new List<string>();
 		roundCount = 0;
+		myText.text = "";
 	}
 
 	void Update () {
@@ -29,7 +32,13 @@ public class RoundCtrl : MonoBehaviour {
 				roundFinished = true;
 				if (roundCount > 2) {
 					Debug.Log ("Game finished");
-					FinishTheGame ();
+					GameObject statCtrl = GameObject.FindWithTag ("StatCtrl");
+					for (int j = 0; j < 2; j++) {
+						GameStatistics stat = statCtrl.GetComponent<StatCtrl> ().playerStat [j];
+						myText.text += stat.GimmeMyStatistics () + " \n " ;
+						myText.text += " \n " ;
+					}
+					Invoke ("FinishTheGame",10.0f);
 				} else	{
 					string winner = CalculateRoundWinner ();
 					Debug.Log ("Round winner: " + winner );
